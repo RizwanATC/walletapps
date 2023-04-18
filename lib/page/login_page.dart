@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project/home_page.dart';
-import 'package:flutter_project/register_page.dart';
+import 'package:flutter_project/page/home_page.dart';
+import 'package:flutter_project/page/register_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
@@ -108,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         // Navigate to the registration page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => home_page()),
+                          MaterialPageRoute(builder: (context) => HomePage()),
                         );
                       },
                     child:Text('Sign In',
