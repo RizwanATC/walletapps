@@ -9,6 +9,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  double _totalSalary = 10000;
+
+  Map<String, double> calculatePercentages(double totalSalary) {
+    double needs = totalSalary * 0.5;
+    double will = totalSalary * 0.3;
+    double savings = totalSalary * 0.2;
+
+    return {'Needs': needs, 'Will': will, 'Savings': savings};
+  }
+
   Map<String, double> _calculateValues(double salary) {
     double epf = (salary * 0.11).toDouble();
     double socso = (salary * 0.02).toDouble();
@@ -42,6 +52,7 @@ class _HomePageState extends State<HomePage> {
 
 
   bool _isExpanded = false;
+  bool _isBudgetExpend = false;
   TextEditingController _textEditingController = TextEditingController();
   String _displayText = '';
   int _enteredNumber = 0;
@@ -72,6 +83,19 @@ class _HomePageState extends State<HomePage> {
       _displayText = '';
     });
   }
+  void _BudgetExpandCard() {
+    setState(() {
+      _isBudgetExpend = true;
+    });
+  }
+
+  // Function to collapse the card
+  void _BudgetCollapseCard() {
+    setState(() {
+      _isBudgetExpend = false;
+
+    });
+  }
 
   // Function to update the display text
   void _updateDisplayText() {
@@ -99,7 +123,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 10),
               Text('2. Tax will be calculated based on your salary range.'),
               SizedBox(height: 10),
-              Text('3. The following calculation is based on the guidelines of the Malaysian government:'),
+              Text('3. The following calculation is based on the guidelines of the Malaysian government.'),
             ],
           ),
           actions: [
@@ -118,7 +142,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Column(
         children: [
           Card(
@@ -227,98 +250,103 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          if (_isBudgetExpend) ...[
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _BudgetCollapseCard();
+              },
+              child: Text('Close'),
+            ),
+          ],
           SizedBox(height: 16),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Add onTap function here
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '70%/30%/20% test/needs/desire',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+
+          Container(
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isBudgetExpend = !_isBudgetExpend;
+                      });
+                    },
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'Budget 50% Needs | 30% Will | 20 % Needs',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        if (_isBudgetExpend)
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  '\$${_totalSalary.toStringAsFixed(2)}',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text('50%'),
+                                        Text(
+                                          '\$${(_totalSalary * 0.5).toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text('30%'),
+                                        Text(
+                                          '\$${(_totalSalary * 0.3).toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Text('20%'),
+                                        Text(
+                                          '\$${(_totalSalary * 0.2).toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                      ],
                     ),
-
-                  ],
+                  ),
                 ),
-              ),
+
+
+
+
+
+              ],
+
+
             ),
+
+
           ),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Add onTap function here
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '70%/30%/20% test/needs/desire',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Add onTap function here
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '70%/30%/20% test/needs/desire',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Card(
-            child: InkWell(
-              onTap: () {
-                // Add onTap function here
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-
-
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-
-
-
-
 
         ],
 
@@ -328,3 +356,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
