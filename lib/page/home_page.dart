@@ -142,217 +142,219 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Card(
-            child: InkWell(
-              onTap: () {
-                _expandCard();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Salary Calculation',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child : Column(
+          children: [
+            Card(
+              child: InkWell(
+                onTap: () {
+                  _expandCard();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Salary Calculation',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _showAlert(context);
-                          },
-                          child: Icon(
-                            Icons.info_outline,
-                            size: 20,
+                          InkWell(
+                            onTap: () {
+                              _showAlert(context);
+                            },
+                            child: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "The following calculation is based on the guidelines of the Malaysian government:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-
-                    if (_isExpanded) ...[
-                      SizedBox(height: 16),
-                      TextField(
-                        controller: _textEditingController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Enter Total Salary',
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          _updateEnteredNumber(value);
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          _updateDisplayText();
-                        },
-                        child: Text('Calculate'),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'KWSP Calculation:',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        ],
                       ),
                       SizedBox(height: 8),
                       Text(
-                        _displayText,
+                        "The following calculation is based on the guidelines of the Malaysian government:",
                         style: TextStyle(
                           fontSize: 14,
+                          color: Colors.grey,
                         ),
                       ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ),
 
-
-          if (_isExpanded) ...[
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _collapseCard();
-              },
-              child: Text('Close'),
-            ),
-          ],
-          SizedBox(height: 16),
-
-          // New text widget
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'Budget Calculation',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          if (_isBudgetExpend) ...[
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _BudgetCollapseCard();
-              },
-              child: Text('Close'),
-            ),
-          ],
-          SizedBox(height: 16),
-
-          Container(
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isBudgetExpend = !_isBudgetExpend;
-                      });
-                    },
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            'Budget 50% Needs | 30% Will | 20 % Needs',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
+                      if (_isExpanded) ...[
+                        SizedBox(height: 16),
+                        TextField(
+                          controller: _textEditingController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter Total Salary',
+                          ),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            _updateEnteredNumber(value);
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateDisplayText();
+                          },
+                          child: Text('Calculate'),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'KWSP Calculation:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (_isBudgetExpend)
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  '\$${_totalSalary.toStringAsFixed(2)}',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text('50%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.5).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('30%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.3).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('20%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.2).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            ],
+                        SizedBox(height: 8),
+                        Text(
+                          _displayText,
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
+              ),
+            ),
+
+
+            if (_isExpanded) ...[
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _collapseCard();
+                },
+                child: Text('Close'),
+              ),
+            ],
+            SizedBox(height: 16),
+
+            // New text widget
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Budget Calculation',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            if (_isBudgetExpend) ...[
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _BudgetCollapseCard();
+                },
+                child: Text('Close'),
+              ),
+            ],
+            SizedBox(height: 16),
+
+            Container(
+              alignment: Alignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isBudgetExpend = !_isBudgetExpend;
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              'Budget 50% Needs | 30% Will | 20 % Needs',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          if (_isBudgetExpend)
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(
+                                    '\$${_totalSalary.toStringAsFixed(2)}',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text('50%'),
+                                          Text(
+                                            '\$${(_totalSalary * 0.5).toStringAsFixed(2)}',
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('30%'),
+                                          Text(
+                                            '\$${(_totalSalary * 0.3).toStringAsFixed(2)}',
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('20%'),
+                                          Text(
+                                            '\$${(_totalSalary * 0.2).toStringAsFixed(2)}',
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
 
 
 
 
 
-              ],
+                ],
+
+
+              ),
 
 
             ),
 
-
-          ),
-
-        ],
+          ],
 
 
-      ),
+        ),
 
+      )
     );
   }
 }
