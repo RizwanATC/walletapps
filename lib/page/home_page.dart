@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,7 +15,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  double _totalSalary = 10000;
+  String firstDisplayText = '';
+  String portionOne = '';
+  String portionTwo = '';
+  String portionThree = '';
 
   Map<String, double> calculatePercentages(double totalSalary) {
     double needs = totalSalary * 0.5;
@@ -49,6 +58,10 @@ class _HomePageState extends State<HomePage> {
 
     };
   }
+
+
+
+
 
 
   bool _isExpanded = false;
@@ -97,6 +110,56 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+
+
+
+
+
+  void _update1stOptionText() {
+    double salary = double.tryParse(_textEditingController.text) ?? 0;
+    Map<String, double> values = _calculateValues(salary);
+    setState(() {
+      double totalNetSalary = values['netSalary'] ?? 0;
+      firstDisplayText = 'Net Salary: RM ${totalNetSalary.toStringAsFixed(2)}';
+      double _portionOne = totalNetSalary * 0.5;
+      double _portionTwo = totalNetSalary * 0.3;
+      double _portionThree = totalNetSalary * 0.2;
+      portionOne = 'RM ${_portionOne.toStringAsFixed(2)}';
+      portionTwo = 'RM ${_portionTwo.toStringAsFixed(2)}';
+      portionThree = 'RM ${_portionThree.toStringAsFixed(2)}';
+      pieChartData = _createPieChartData(_portionOne, _portionTwo, _portionThree);
+    });
+  }
+
+  late List<PieChartSectionData> pieChartData = [];
+
+  List<PieChartSectionData> _createPieChartData(double portionOne, double portionTwo, double portionThree) {
+    return [
+      PieChartSectionData(
+        color: Colors.green,
+        value: portionOne,
+        title: '50%',
+        radius: 50,
+      ),
+      PieChartSectionData(
+        color: Colors.blue,
+        value: portionTwo,
+        title: '30%',
+        radius: 50,
+      ),
+      PieChartSectionData(
+        color: Colors.orange,
+        value: portionThree,
+        title: '20%',
+        radius: 50,
+      ),
+    ];
+  }
+
+
+
+
+
   // Function to update the display text
   void _updateDisplayText() {
     double salary = double.tryParse(_textEditingController.text) ?? 0;
@@ -141,217 +204,227 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Card(
-            child: InkWell(
-              onTap: () {
-                _expandCard();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Salary Calculation',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _showAlert(context);
-                          },
-                          child: Icon(
-                            Icons.info_outline,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "The following calculation is based on the guidelines of the Malaysian government:",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
 
-                    if (_isExpanded) ...[
-                      SizedBox(height: 16),
-                      TextField(
-                        controller: _textEditingController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Enter Total Salary',
-                        ),
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          _updateEnteredNumber(value);
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          _updateDisplayText();
-                        },
-                        child: Text('Calculate'),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'KWSP Calculation:',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+    return Scaffold(
+
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              child: InkWell(
+                onTap: () {
+                  _expandCard();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Salary Calculation',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _showAlert(context);
+                            },
+                            child: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 8),
                       Text(
-                        _displayText,
+                        "The following calculation is based on the guidelines of the Malaysian government:",
                         style: TextStyle(
                           fontSize: 14,
+                          color: Colors.grey,
                         ),
                       ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ),
 
-
-          if (_isExpanded) ...[
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _collapseCard();
-              },
-              child: Text('Close'),
-            ),
-          ],
-          SizedBox(height: 16),
-
-          // New text widget
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              'Budget Calculation',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          if (_isBudgetExpend) ...[
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _BudgetCollapseCard();
-              },
-              child: Text('Close'),
-            ),
-          ],
-          SizedBox(height: 16),
-
-          Container(
-            alignment: Alignment.center,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isBudgetExpend = !_isBudgetExpend;
-                      });
-                    },
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            'Budget 50% Needs | 30% Will | 20 % Needs',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
+                      if (_isExpanded) ...[
+                        SizedBox(height: 16),
+                        TextField(
+                          controller: _textEditingController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter Total Salary',
+                          ),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            _updateEnteredNumber(value);
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updateDisplayText();
+                          },
+                          child: Text('Calculate'),
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'KWSP Calculation:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (_isBudgetExpend)
-                          Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(
-                                  '\$${_totalSalary.toStringAsFixed(2)}',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text('50%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.5).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('30%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.3).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('20%'),
-                                        Text(
-                                          '\$${(_totalSalary * 0.2).toStringAsFixed(2)}',
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                            ],
+                        SizedBox(height: 8),
+                        Text(
+                          _displayText,
+                          style: TextStyle(
+                            fontSize: 14,
                           ),
+                        ),
                       ],
-                    ),
+                    ],
                   ),
                 ),
+              ),
+            ),
 
 
+            if (_isExpanded) ...[
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _collapseCard();
+                },
+                child: Text('Close'),
+              ),
+            ],
+            SizedBox(height: 16),
+
+            // New text widget
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Budget Calculation',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            if (_isBudgetExpend) ...[
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _BudgetCollapseCard();
+                },
+                child: Text('Close'),
+              ),
+            ],
+            SizedBox(height: 16),
+
+            Container(
+              alignment: Alignment.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Card(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _BudgetExpandCard() ;
+                          _update1stOptionText();
+
+                        });
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              'Budget 50% Needs | 30% Will | 20 % Needs',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          if (_isBudgetExpend)
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(
+                                    firstDisplayText,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Container(
+                                  child: PieChart(
+                                    PieChartData(
+                                      sections: _createPieChartData(0.2, 0.3, 0.5),                                    ),
+                                  ),
+
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text('50%'),
+                                          Text(
+                                            portionOne,
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('30%'),
+                                          Text(
+                                            portionTwo,
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('20%'),
+                                          Text(
+                                            portionThree,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                        ],
+                      ),
+                    ),
+                  ),
+
+                ],
 
 
-
-              ],
+              ),
 
 
             ),
 
-
-          ),
-
-        ],
+          ],
 
 
-      ),
+        ),
+
+      )
+
 
     );
   }
