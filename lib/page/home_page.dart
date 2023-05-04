@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   String portionOne = '';
   String portionTwo = '';
   String portionThree = '';
+  String portionFour = '';
 
   Map<String, double> calculatePercentages(double totalSalary) {
     double needs = totalSalary * 0.5;
