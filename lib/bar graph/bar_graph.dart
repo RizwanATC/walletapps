@@ -27,7 +27,7 @@ class PortionBarGraph extends StatelessWidget {
     );
     myBarData.initializeBarData();
    return BarChart(
-     BarChartData(
+     BarChartData(//ss
        maxY: 100,
        minY: 0,
        gridData: FlGridData(show: false),
