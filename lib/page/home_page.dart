@@ -195,8 +195,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
 
-      body: SingleChildScrollView(
-        child: Column(
           children: [
             Card(
               child: InkWell(
@@ -324,8 +322,6 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _BudgetExpandCard() ;
-                          _update1stOptionText();
 
                         });
                       },
@@ -348,51 +344,30 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Text(
-                                    firstDisplayText,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Container(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: PortionBarGraph(
-                                      portionSum: portionSum,
-                                    ),
-                                  )
 
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
                         ],
                       ),
                     ),
                   ),
 
+
                 ],
+
+
+
 
 
               ),
 
-
-            ),
-
           ],
 
 
-        ),
 
       )
 
 
+
+      )
     );
   }
 }
