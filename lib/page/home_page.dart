@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_project/bar%20graph/bar_graph.dart';
+
+
+
+
+
+
+
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -9,7 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  double _totalSalary = 10000;
+  String firstDisplayText = '';
+  String portionOne = '';
+  String portionTwo = '';
+  String portionThree = '';
 
   Map<String, double> calculatePercentages(double totalSalary) {
     double needs = totalSalary * 0.5;
@@ -49,6 +62,10 @@ class _HomePageState extends State<HomePage> {
 
     };
   }
+
+
+
+
 
 
   bool _isExpanded = false;
@@ -97,6 +114,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+
+
+
+
+
+  List<double> portionSum = [0, 0, 0];
+
+  void _update1stOptionText() {
+    double salary = double.tryParse(_textEditingController.text) ?? 0;
+    Map<String, double> values = _calculateValues(salary);
+    setState(() {
+      double totalNetSalary = values['netSalary'] ?? 0;
+      firstDisplayText = 'Net Salary: RM ${totalNetSalary.toStringAsFixed(2)}';
+      double portionOne = totalNetSalary * 0.5;
+      double portionTwo = totalNetSalary * 0.3;
+      double portionThree = totalNetSalary * 0.2;
+      portionOne = double.parse(portionOne.toStringAsFixed(2));
+      portionTwo = double.parse(portionTwo.toStringAsFixed(2));
+      portionThree = double.parse(portionThree.toStringAsFixed(2));
+      double perConvertOne =  (totalNetSalary * 0.5) / totalNetSalary * 100;
+      double perConvertTwo =  (totalNetSalary * 0.3) / totalNetSalary * 100;
+      double perConvertThree =  (totalNetSalary * 0.2) / totalNetSalary * 100;
+
+      portionSum = [perConvertOne, perConvertTwo, perConvertThree];
+    });
+  }
+
+
+
+
+
+
+
+
   // Function to update the display text
   void _updateDisplayText() {
     double salary = double.tryParse(_textEditingController.text) ?? 0;
@@ -141,9 +192,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: SingleChildScrollView(
-        child : Column(
+
           children: [
             Card(
               child: InkWell(
@@ -271,7 +322,7 @@ class _HomePageState extends State<HomePage> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          _isBudgetExpend = !_isBudgetExpend;
+
                         });
                       },
                       child: Column(
@@ -293,66 +344,28 @@ class _HomePageState extends State<HomePage> {
                                 Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Text(
-                                    '\$${_totalSalary.toStringAsFixed(2)}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text('50%'),
-                                          Text(
-                                            '\$${(_totalSalary * 0.5).toStringAsFixed(2)}',
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text('30%'),
-                                          Text(
-                                            '\$${(_totalSalary * 0.3).toStringAsFixed(2)}',
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text('20%'),
-                                          Text(
-                                            '\$${(_totalSalary * 0.2).toStringAsFixed(2)}',
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
 
-                              ],
-                            ),
                         ],
                       ),
                     ),
                   ),
 
 
-
-
-
                 ],
+
+
+
 
 
               ),
 
-
-            ),
-
           ],
 
 
-        ),
+
+      )
+
+
 
       )
     );
