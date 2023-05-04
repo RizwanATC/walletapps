@@ -37,8 +37,13 @@ class PortionBarGraph extends StatelessWidget {
          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-         bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,
-             getTitlesWidget: getBottomTittles)),
+         bottomTitles: AxisTitles(
+           sideTitles: SideTitles(
+             showTitles: true,
+             getTitlesWidget: (value, meta) => getBottomTittles(value, meta, myBarData),
+           ),
+         ),
+
 
        ),
        barGroups: myBarData.barData
@@ -63,21 +68,37 @@ class PortionBarGraph extends StatelessWidget {
   }
 }
 
-Widget getBottomTittles(double value,TitleMeta meta){
-  const style = TextStyle(color: Colors.grey,
+Widget getBottomTittles(double value, TitleMeta meta, BarData myBarData) {
+  const style = TextStyle(
+    color: Colors.grey,
     fontWeight: FontWeight.bold,
-    fontSize: 14,);
+    fontSize: 14,
+  );
   late Widget text;
-  switch(value.toInt()){
+  switch (value.toInt()) {
     case 0:
-      text = const Text('Needs',style: style,);
-    break;
+      text = Text(
+        'Portion One: ${myBarData.portionOne.toStringAsFixed(2)}%',
+        style: style,
+      );
+      break;
     case 1:
-      text = const Text('Will',style: style,);
+      text = Text(
+        'Portion Two: ${myBarData.portionTwo.toStringAsFixed(2)}%',
+        style: style,
+      );
       break;
     case 2:
-      text = const Text('Savings',style: style,);
+      text = Text(
+        'Portion Three: ${myBarData.portionThree.toStringAsFixed(2)}%',
+        style: style,
+      );
+      break;
+    default:
+      text = Container();
       break;
   }
   return SideTitleWidget(child: text, axisSide: meta.axisSide);
 }
+
+

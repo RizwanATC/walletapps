@@ -10,9 +10,7 @@ class BarData{
     required this.portionTwo,
     required this.portionThree,
   });
-  String toFormattedString() {
-    return 'Needs (${portionOne.toStringAsFixed(0)}%), Will (${portionTwo.toStringAsFixed(0)}%), Savings (${portionThree.toStringAsFixed(0)}%)';
-  }
+
   List<PortionBar>barData = [];
 
 
