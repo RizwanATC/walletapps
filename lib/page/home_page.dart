@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
+
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_project/bar%20graph/bar_graph.dart';
+
+
+
 
 
 
@@ -115,46 +119,30 @@ class _HomePageState extends State<HomePage> {
 
 
 
+  List<double> portionSum = [0, 0, 0];
+
   void _update1stOptionText() {
     double salary = double.tryParse(_textEditingController.text) ?? 0;
     Map<String, double> values = _calculateValues(salary);
     setState(() {
       double totalNetSalary = values['netSalary'] ?? 0;
       firstDisplayText = 'Net Salary: RM ${totalNetSalary.toStringAsFixed(2)}';
-      double _portionOne = totalNetSalary * 0.5;
-      double _portionTwo = totalNetSalary * 0.3;
-      double _portionThree = totalNetSalary * 0.2;
-      portionOne = 'RM ${_portionOne.toStringAsFixed(2)}';
-      portionTwo = 'RM ${_portionTwo.toStringAsFixed(2)}';
-      portionThree = 'RM ${_portionThree.toStringAsFixed(2)}';
-      pieChartData = _createPieChartData(_portionOne, _portionTwo, _portionThree);
+      double portionOne = totalNetSalary * 0.5;
+      double portionTwo = totalNetSalary * 0.3;
+      double portionThree = totalNetSalary * 0.2;
+      portionOne = double.parse(portionOne.toStringAsFixed(2));
+      portionTwo = double.parse(portionTwo.toStringAsFixed(2));
+      portionThree = double.parse(portionThree.toStringAsFixed(2));
+      double perConvertOne =  (totalNetSalary * 0.5) / totalNetSalary * 100;
+      double perConvertTwo =  (totalNetSalary * 0.3) / totalNetSalary * 100;
+      double perConvertThree =  (totalNetSalary * 0.2) / totalNetSalary * 100;
+
+      portionSum = [perConvertOne, perConvertTwo, perConvertThree];
     });
   }
 
-  late List<PieChartSectionData> pieChartData = [];
 
-  List<PieChartSectionData> _createPieChartData(double portionOne, double portionTwo, double portionThree) {
-    return [
-      PieChartSectionData(
-        color: Colors.green,
-        value: portionOne,
-        title: '50%',
-        radius: 50,
-      ),
-      PieChartSectionData(
-        color: Colors.blue,
-        value: portionTwo,
-        title: '30%',
-        radius: 50,
-      ),
-      PieChartSectionData(
-        color: Colors.orange,
-        value: portionThree,
-        title: '20%',
-        radius: 50,
-      ),
-    ];
-  }
+
 
 
 
@@ -365,10 +353,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 Container(
-                                  child: PieChart(
-                                    PieChartData(
-                                      sections: _createPieChartData(0.2, 0.3, 0.5),                                    ),
-                                  ),
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: PortionBarGraph(
+                                      portionSum: portionSum,
+                                    ),
+                                  )
 
                                 ),
                                 Padding(
@@ -376,30 +366,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text('50%'),
-                                          Text(
-                                            portionOne,
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text('30%'),
-                                          Text(
-                                            portionTwo,
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text('20%'),
-                                          Text(
-                                            portionThree,
-                                          ),
-                                        ],
-                                      ),
+
                                     ],
                                   ),
                                 ),
