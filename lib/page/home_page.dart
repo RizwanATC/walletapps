@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_project/bar%20graph/bar_graph.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 
@@ -366,6 +368,7 @@ class _HomePageState extends State<HomePage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: label,
+          labelStyle: TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -404,7 +407,44 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+        resizeToAvoidBottomInset: true,
 
+      /*bottomNavigationBar: Container(
+        color: Colors.deepPurple,
+        child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 12),
+        child:GNav(
+            backgroundColor: Colors.deepPurple,
+            color: Colors.white,
+            activeColor: Colors.white,
+            tabBackgroundColor: Colors.grey.shade500,
+            gap: 8,
+            padding: EdgeInsets.all(16),
+            tabs: const[
+              GButton(
+                icon: Icons.home,
+                text: 'Home',
+
+              ),
+              GButton(
+                icon: Icons.favorite_border,
+                text: 'Likes',
+
+              ),
+              GButton(
+                icon: Icons.search,
+                text: 'Search',
+
+              ),
+              GButton(
+                icon: Icons.settings,
+                text: 'Setting',
+
+              )
+            ]
+        ),
+            ),
+      ),*/
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -416,16 +456,17 @@ class _HomePageState extends State<HomePage> {
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'Salary Calculation',
-                              style: TextStyle(
+                              style: GoogleFonts.bebasNeue(
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold,
+
+
                               ),
                             ),
                             InkWell(
@@ -475,9 +516,8 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(height: 16),
                           Text(
                             'KWSP Calculation:',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.bebasNeue(
+                              fontSize: 18,
                             ),
                           ),
                           SizedBox(height: 8),
@@ -490,71 +530,8 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(height: 8),
                           Column(
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Card(
-                                      color: Colors.deepPurple[300],
-                                      child: Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child:Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Budget 50 | 30 | 20',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                _displayTextOne,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-
-                                            ],
-                                          )
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Card(
-                                      color: Colors.deepPurple[300],
-
-                                      child: Padding(
-                                          padding: EdgeInsets.all(16.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Budget 70 | 20 | 10',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-
-                                                ),
-                                              ),
-                                              SizedBox(height: 8),
-                                              Text(
-                                                _displayTextTwo,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          )
-
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
                               Card(
+                                color: Colors.deepPurple[200],
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Column(
@@ -564,6 +541,7 @@ class _HomePageState extends State<HomePage> {
                                         'Enter Your Monthly Commitments',
                                         style: TextStyle(
                                           fontSize: 18,
+                                          color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -845,26 +823,35 @@ class _HomePageState extends State<HomePage> {
 
               if (_isExpanded) ...[
                 SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    _collapseCard();
-                  },
-                  child: Text('Recalculate'),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Add padding to the ElevatedButton
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _collapseCard();
+                    },
+                    child: Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.refresh),
+                          SizedBox(width: 8),
+                          Text(
+                            'Recalculate',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
+
+
               SizedBox(height: 16),
 
-              // New text widget
-
-
             ],
-
-
           ),
-
         )
-
-
     );
   }
 }
