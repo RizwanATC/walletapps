@@ -1,12 +1,68 @@
 import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_project/bar%20graph/bar_graph.dart';
+import 'package:flutter_project/main.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
+AppOpenAd? openAd;
 
+Future<void> loadAd() async {
+  await AppOpenAd.load(
+    adUnitId: 'ca-app-pub-5978067529669035/5441150822',
+    request: const AdRequest(),
+    adLoadCallback: AppOpenAdLoadCallback(
+      onAdLoaded: (ad) {
+        print("Ad is loaded");
+        openAd = ad;
+        openAd!.show();
+      },
+      onAdFailedToLoad: (error) {
+        print('Ad failed to load $error');
+      },
+    ),
+    orientation: AppOpenAd.orientationPortrait,
+  );
+}
+
+void showAd() {
+  if (openAd == null) {
+    print('Trying to show ad before loading');
+    loadAd();
+    return;
+  }
+
+  openAd!.fullScreenContentCallback = FullScreenContentCallback(
+    onAdShowedFullScreenContent: (ad) {
+      print('onAdShowedFullScreenContent');
+    },
+    onAdFailedToShowFullScreenContent: (ad, error) {
+      ad.dispose();
+      print('Failed to load ad');
+      openAd = null;
+      loadAd();
+    },
+    onAdDismissedFullScreenContent: (ad) {
+      ad.dispose();
+      print('Ad dismissed');
+      openAd = null;
+      loadAd();
+    },
+  );
+
+  openAd!.show();
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
+  await loadAd();
+  runApp(const MyApp());
+}
 
 
 
@@ -368,10 +424,12 @@ class _HomePageState extends State<HomePage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: label,
+          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0), // Adjust the padding as needed
         ),
       ),
     );
   }
+
   //alert
   void _showAlert(BuildContext context) {
     showDialog(
@@ -404,8 +462,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Make the status bar transparent
+    ));
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+
         theme: ThemeData(primarySwatch: Colors.deepPurple),
         home:  Scaffold(
 
@@ -535,6 +596,7 @@ class _HomePageState extends State<HomePage> {
                                   _updateDisplayText();
                                   _updateDisplayfirstBudget();
                                   _updateDisplaySecondBudget();
+                                  showAd();
                                 },
                                 child: Text('Calculate'),
                               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_project/page/home_page.dart';
 import 'package:lottie/lottie.dart';
 
@@ -9,15 +10,14 @@ class Splash extends StatefulWidget {
   State<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> with SingleTickerProviderStateMixin{
-
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  @override
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 2),
       vsync: this,
     );
 
@@ -37,21 +37,30 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin{
     });
   }
 
-
-
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Make the status bar transparent
+    ));
     return Scaffold(
-      body: Center(
-        child: Lottie.network(
-          'hhttps://assets6.lottiefiles.com/packages/lf20_0fvcgy9k.json',
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.deepPurple[300], // Set your desired background color here
+        ),
+        child: Center(
+          child: Container(
+            width: 200,
+            height: 200,
+            child: Lottie.network(
+              'https://assets2.lottiefiles.com/packages/lf20_ml0yft0o.json',
+            ),
+          ),
         ),
       ),
     );
