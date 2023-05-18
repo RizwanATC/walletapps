@@ -407,38 +407,30 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Make the status bar transparent
     ));
-    return MaterialApp(
-
-        theme: ThemeData(primarySwatch: Colors.deepPurple),
-        home:  Scaffold(
-
-            appBar: AppBar(
-              elevation: 5,
+    return Scaffold(
+      backgroundColor: Colors.deepPurple[300],
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+              elevation: 0,
               centerTitle: true,
               title: Text('BUDGET CALCULATION',
               style: GoogleFonts.bebasNeue(
                 fontSize: 25,
               )),
-              leading: IconButton(
-                onPressed: (){
-
-                },
-                icon: Icon(Icons.menu),
-              ),
-              actions: [
-                IconButton(
-                    onPressed:() {
-
-                },
-                    icon:Icon(Icons.person) )
-              ],
-
             ),
 
             /*bottomNavigationBar: Container(
@@ -479,412 +471,423 @@ class _HomePageState extends State<HomePage> {
       ),*/
 
 
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Card(
-                    child: InkWell(
-                      onTap: () {
-                        _expandCard();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Salary Calculation',
-                                  style: GoogleFonts.bebasNeue(
-                                    fontSize: 18,
+            body: Container(
 
-
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    _showAlert(context);
-                                  },
-                                  child: Icon(
-                                    Icons.info_outline,
-                                    size: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              "The following calculation is based on the guidelines of the Malaysian government:",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
-
-                            if (_isExpanded) ...[
-                              SizedBox(height: 16),
-                              TextField(
-                                controller: _textEditingController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter Total Salary',
-                                ),
-                                keyboardType: TextInputType.number,
-                                onChanged: (value) {
-                                  _updateEnteredNumber(value);
-                                },
-                              ),
-                              SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: _textEditingController?.text?.isEmpty ?? true
-                                    ? null
-                                    : () {
-                                  _updateDisplayText();
-                                  _updateDisplayfirstBudget();
-                                  _updateDisplaySecondBudget();
-
-                                },
-                                child: Text('Calculate'),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'KWSP Calculation:',
-                                style: GoogleFonts.bebasNeue(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                _displayText,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Column(
+              padding: EdgeInsets.all(16),
+              child:
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(
+                      elevation: 4,
+                      child: InkWell(
+                        onTap: () {
+                          _expandCard();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                                        children: [
-                                          Text(
-                                            'Enter Your Monthly Commitments',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(height: 16),
-                                          _buildTextField('Rent', _rentController),
-                                          _buildTextField('Electricity', _electricityController),
-                                          _buildTextField('Water', _waterController),
-                                          _buildTextField('Internet', _internetController),
-                                          _buildTextField('Phone Bill', _phoneController),
-                                          _buildTextField('Family', _familyController),
-                                          _buildTextField('Debt', _debtController),
-                                          _buildTextField('Vehicle', _vehicleController),
-                                          _buildTextField('Food and Drinks', _foodController),
-                                          _buildTextField('Other Commitments', _otherController),
-                                          SizedBox(height: 16),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              _calculateTotalCommitment();
+                                  Text(
+                                    'Salary Calculation',
+                                    style: GoogleFonts.bebasNeue(
+                                      fontSize: 18,
 
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Text('Budget Calculation'),
-                                                    content: SingleChildScrollView(
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            'Total Commitment: RM ${_totalCommitment.toStringAsFixed(2)}',
-                                                            style: TextStyle(
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 16),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: InkWell(
-                                                                  onTap: _calFirstOption < 0
-                                                                      ? () {
-                                                                    showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext context) {
-                                                                        return AlertDialog(
-                                                                          title: Text("Budget Info"),
-                                                                          content: Text("You have negative balance, please readjust your commitment."),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              child: Text("OK"),
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop();
-                                                                              },
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  }
-                                                                      : () {
-                                                                    showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext context) {
-                                                                        return AlertDialog(
-                                                                          title: Text("Budget Info"),
-                                                                          content: Column(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            children: [
-                                                                              Text("Based on the calculation you have a balance of RM ${_calFirstOption.toStringAsFixed(2)}, the extras can "
-                                                                                  "be allocated to wants and savings as such"),
-                                                                              Row(
-                                                                                children: [
-                                                                                  Text("Wants : RM ${_thirtyPercent.toStringAsFixed(2)} + "),
-                                                                                  Text(
-                                                                                    "RM ${_wantsBalannceFirst.toStringAsFixed(2)}",
-                                                                                    style: TextStyle(color: Colors.green),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              Row(
-                                                                                children: [
-                                                                                  Text("Savings : RM ${_twentyPercent.toStringAsFixed(2)} + "),
-                                                                                  Text(
-                                                                                    "RM ${_savingsBalanceFirst.toStringAsFixed(2)}",
-                                                                                    style: TextStyle(color: Colors.green),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              // Add more widgets here
-                                                                            ],
-                                                                          ),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              child: Text("OK"),
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop();
-                                                                              },
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  },
-
-                                                                  child:
-                                                                  Card(
-                                                                    elevation: 5,
-                                                                    color: _totalCommitment > _fiftyPercent ? Colors.red : Colors.green,
-                                                                    child: Padding(
-                                                                      padding: EdgeInsets.all(16.0),
-                                                                      child: Column(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Budget \n50 | 30 | 20',
-                                                                            style: TextStyle(
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(height: 8),
-                                                                          Text(
-                                                                            _displayTextOne,
-                                                                            style: TextStyle(
-                                                                              color: _totalCommitment > _fiftyPercent ? Colors.white : null,
-                                                                              fontSize: 14,
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: InkWell(
-                                                                  onTap: _calSecondOption < 0
-                                                                      ? () {
-                                                                    showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext context) {
-                                                                        return AlertDialog(
-                                                                          title: Text("Budget Info"),
-                                                                          content: Text("You have negative balance, please readjust your commitment."),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              child: Text("OK"),
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop();
-                                                                              },
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  }
-                                                                      : () {
-                                                                    showDialog(
-                                                                      context: context,
-                                                                      builder: (BuildContext context) {
-                                                                        return AlertDialog(
-                                                                          title: Text("Budget Info"),
-                                                                          content: Column(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            children: [
-                                                                              Text("Based on the calculation you have a balance of RM ${_calSecondOption.toStringAsFixed(2)}, the extras can "
-                                                                                  "be allocated to wants and savings as such"),
-                                                                              Row(
-                                                                                children: [
-                                                                                  Text("Wants : RM ${_twentyPercent.toStringAsFixed(2)} + "),
-                                                                                  Text(
-                                                                                    "RM ${_wantsBalannceSecond.toStringAsFixed(2)}",
-                                                                                    style: TextStyle(color: Colors.green),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              Row(
-                                                                                children: [
-                                                                                  Text("Savings : RM ${_twentyPercent.toStringAsFixed(2)} + "),
-                                                                                  Text(
-                                                                                    "RM ${_savingsBalanceSecond.toStringAsFixed(2)}",
-                                                                                    style: TextStyle(color: Colors.green),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                              // Add more widgets here
-                                                                            ],
-                                                                          ),
-                                                                          actions: [
-                                                                            TextButton(
-                                                                              child: Text("OK"),
-                                                                              onPressed: () {
-                                                                                Navigator.of(context).pop();
-                                                                              },
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  },
-
-                                                                  child:
-                                                                  Card(
-                                                                    elevation: 5,
-                                                                    color: _totalCommitment > _seventyPercent ? Colors.red : Colors.green,
-                                                                    child: Padding(
-                                                                      padding: EdgeInsets.all(16.0),
-                                                                      child: Column(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'Budget \n70 | 20 | 10',
-                                                                            style: TextStyle(
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(height: 8),
-                                                                          Text(
-                                                                            _displayTextTwo,
-                                                                            style: TextStyle(
-                                                                              color: _totalCommitment > _seventyPercent ? Colors.white : null,
-                                                                              fontSize: 14,
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-
-
-
-                                                            ],
-                                                          ),
-
-
-
-
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(context);
-                                                        },
-                                                        child: Text('Close'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }, child: Text('Calculate Total Commitment'),
-                                          ),
-                                          SizedBox(height: 16),
-
-                                        ],
-                                      ),
 
                                     ),
-                                  )
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      _showAlert(context);
+                                    },
+                                    child: Icon(
+                                      Icons.info_outline,
+                                      size: 20,
+                                    ),
+                                  ),
                                 ],
-                              )
-
-
-
-
-
-
-                            ],
-                          ],
-                        ),
-
-                      ),
-                    ),
-                  ),
-
-
-                  if (_isExpanded)
-                    ...[
-                      SizedBox(height: 16),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _collapseCard();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.refresh),
-                              SizedBox(width: 8),
-                              Text(
-                                'Recalculate',
-                                textAlign: TextAlign.center,
                               ),
+                              SizedBox(height: 8),
+                              Text(
+                                "The following calculation is based on the guidelines of the Malaysian government:",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                ),
+                              ),
+
+                              if (_isExpanded) ...[
+                                SizedBox(height: 16),
+                                TextField(
+                                  controller: _textEditingController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Enter Total Salary',
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (value) {
+                                    _updateEnteredNumber(value);
+                                  },
+                                ),
+                                SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: _textEditingController?.text?.isEmpty ?? true
+                                      ? null
+                                      : () {
+                                    _updateDisplayText();
+                                    _updateDisplayfirstBudget();
+                                    _updateDisplaySecondBudget();
+
+                                  },
+                                  child: Text('Calculate'),
+                                ),
+
+
+                                SizedBox(height: 16),
+                                Text(
+                                  'KWSP Calculation:',
+                                  style: GoogleFonts.bebasNeue(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  _displayText,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+
+                                ElevatedButton(
+                                  onPressed:_textEditingController?.text?.isEmpty ?? true
+                                      ? null
+                                      : () {
+                                    _calculateTotalCommitment();
+
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20.0),
+                                        ),
+                                      ),
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          color: Colors.transparent, // Make the background color transparent
+                                          child: SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 16.0,left: 16.0,right: 16.0),
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        'Enter Your Monthly Commitments',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 16),
+                                                      _buildTextField('Rent', _rentController),
+                                                      _buildTextField('Electricity', _electricityController),
+                                                      _buildTextField('Water', _waterController),
+                                                      _buildTextField('Internet', _internetController),
+                                                      _buildTextField('Phone Bill', _phoneController),
+                                                      _buildTextField('Family', _familyController),
+                                                      _buildTextField('Debt', _debtController),
+                                                      _buildTextField('Vehicle', _vehicleController),
+                                                      _buildTextField('Food and Drinks', _foodController),
+                                                      _buildTextField('Other Commitments', _otherController),
+                                                      SizedBox(height: 16),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          _calculateTotalCommitment();
+
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (BuildContext context) {
+                                                              return AlertDialog(
+                                                                title: Text('Budget Calculation'),
+                                                                content: SingleChildScrollView(
+                                                                  child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      Text(
+                                                                        'Total Commitment: RM ${_totalCommitment.toStringAsFixed(2)}',
+                                                                      ),
+                                                                      SizedBox(height: 16),
+                                                                      Row(
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child: InkWell(
+                                                                              onTap: _calFirstOption < 0
+                                                                                  ? () {
+                                                                                showDialog(
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text("Budget Info"),
+                                                                                      content: Text("You have a negative balance, please readjust your commitments."),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          child: Text("OK"),
+                                                                                          onPressed: () {
+                                                                                            Navigator.of(context).pop();
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              }
+                                                                                  : () {
+                                                                                showDialog(
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text("Budget Info"),
+                                                                                      content: Column(
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        children: [
+                                                                                          Text("Based on the calculation, you have a balance of RM ${_calFirstOption.toStringAsFixed(2)}. The extras can be allocated to wants and savings as follows:"),
+                                                                                          Row(
+                                                                                            children: [
+                                                                                              Text("Wants: RM ${_thirtyPercent.toStringAsFixed(2)} + "),
+                                                                                              Text(
+                                                                                                "RM ${_wantsBalannceFirst.toStringAsFixed(2)}",
+                                                                                                style: TextStyle(color: Colors.green),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                          Row(
+                                                                                            children: [
+                                                                                              Text("Savings: RM ${_twentyPercent.toStringAsFixed(2)} + "),
+                                                                                              Text(
+                                                                                                "RM ${_savingsBalanceFirst.toStringAsFixed(2)}",
+
+                                                                                                style: TextStyle(color: Colors.green),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+// Add more widgets here
+                                                                                        ],
+                                                                                      ),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          child: Text("OK"),
+                                                                                          onPressed: () {
+                                                                                            Navigator.of(context).pop();
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              },
+                                                                              child: Card(
+                                                                                elevation: 5,
+                                                                                color: _totalCommitment > _fiftyPercent ? Colors.red : Colors.green,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(20.0), // Add round top corners
+                                                                                ),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsets.all(16.0),
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        'Budget \n50 | 30 | 20',
+                                                                                        style: TextStyle(
+                                                                                          fontSize: 16,
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        ),
+                                                                                      ),
+                                                                                      SizedBox(height: 8),
+                                                                                      Text(
+                                                                                        _displayTextOne,
+                                                                                        style: TextStyle(
+                                                                                          color: _totalCommitment > _fiftyPercent ? Colors.white : null,
+                                                                                          fontSize: 14,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child: InkWell(
+                                                                              onTap: _calSecondOption < 0
+                                                                                  ? () {
+                                                                                showDialog(
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text("Budget Info"),
+                                                                                      content: Text("You have a negative balance, please readjust your commitments."),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          child: Text("OK"),
+                                                                                          onPressed: () {
+                                                                                            Navigator.of(context).pop();
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              }
+                                                                                  : () {
+                                                                                showDialog(
+                                                                                  context: context,
+                                                                                  builder: (BuildContext context) {
+                                                                                    return AlertDialog(
+                                                                                      title: Text("Budget Info"),
+                                                                                      content: Column(
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                        mainAxisSize: MainAxisSize.min,
+                                                                                        children: [
+                                                                                          Text("Based on the calculation, you have a balance of RM ${_calSecondOption.toStringAsFixed(2)}. The extras can be allocated to wants and savings as follows:"),
+                                                                                          Row(
+                                                                                            children: [
+                                                                                              Text("Wants: RM ${_twentyPercent.toStringAsFixed(2)} + "),
+                                                                                              Text(
+                                                                                                "RM ${_wantsBalannceSecond.toStringAsFixed(2)}",
+                                                                                                style: TextStyle(color: Colors.green),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                          Row(
+                                                                                            children: [
+                                                                                              Text("Savings: RM ${_twentyPercent.toStringAsFixed(2)} + "),
+                                                                                              Text(
+                                                                                                "RM ${_savingsBalanceSecond.toStringAsFixed(2)}",
+                                                                                                style: TextStyle(color: Colors.green),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+// Add more widgets here
+                                                                                        ],
+                                                                                      ),
+                                                                                      actions: [
+                                                                                        TextButton(
+                                                                                          child: Text("OK"),
+                                                                                          onPressed: () {
+                                                                                            Navigator.of(context).pop();
+                                                                                          },
+                                                                                        ),
+                                                                                      ],
+                                                                                    );
+                                                                                  },
+                                                                                );
+                                                                              },
+                                                                              child: Card(
+                                                                                elevation: 5,
+                                                                                color: _totalCommitment > _seventyPercent ? Colors.red : Colors.green,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  borderRadius: BorderRadius.circular(20.0), // Add round top corners
+                                                                                ),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsets.all(16.0),
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        'Budget \n70 | 20 | 10',
+                                                                                        style: TextStyle(
+                                                                                          fontSize: 16,
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        ),
+                                                                                      ),
+                                                                                      SizedBox(height: 8),
+                                                                                      Text(
+                                                                                        _displayTextTwo,
+                                                                                        style: TextStyle(
+                                                                                          color: _totalCommitment > _seventyPercent ? Colors.white : null,
+                                                                                          fontSize: 14,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          alignment: Alignment.center,
+                                                          child: Text('Calculate Total Commitment'),
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 16),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text('Calculate Commitment'),
+                                ),
+
+
+
+
+
+
+                              ],
                             ],
                           ),
+
                         ),
                       ),
-                    ],
+                    ),
 
 
-                ],
-              ),
-            )
-        )
+
+
+                  ],
+                ),
+              )
+              ,
+            ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.monetization_on),
+            label: 'Budget Calculation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_chart),
+            label: 'Expenses',
+          ),
+
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+
     );
+
   }
 }
